@@ -1,0 +1,16 @@
+__pycache__/
+*.pkl
+*.pyc
+.streamlit/
+_cache_*
+/tmp/
+80ac71a4f2f04ab18556090bc3982af4.tar
+tabs/
+.RData
+rvest.Rmd
+app.R
+*.rds
+model
+finalmodel
+audit_model.py
+verify_model.py
