@@ -98,32 +98,36 @@ if page == "🔮 Predict":
     actual = row["HoF"]
     color = prob_color(prob)
 
-    # Probability gauge
+    # Probability donut ring
     col_gauge, col_stats = st.columns([1, 2])
 
     with col_gauge:
-        fig = go.Figure(go.Indicator(
-            mode="gauge+number",
-            value=prob * 100,
-            number={"suffix": "%", "font": {"size": 40}},
-            gauge={
-                "axis": {"range": [0, 100], "tickwidth": 1},
-                "bar": {"color": color},
-                "bgcolor": "#f0f0f0",
-                "steps": [
-                    {"range": [0, 40], "color": "#fde8e8"},
-                    {"range": [40, 70], "color": "#fef6e0"},
-                    {"range": [70, 100], "color": "#e8f8ef"},
-                ],
-                "threshold": {"line": {"color": color, "width": 3}, "value": prob * 100},
-            },
-            title={"text": "HOF Probability"},
+        fig = go.Figure(go.Pie(
+            values=[prob * 100, 100 - prob * 100],
+            hole=0.75,
+            marker=dict(colors=[color, "#f0f0f0"], line=dict(width=0)),
+            textinfo="none",
+            hoverinfo="skip",
+            sort=False,
         ))
-        fig.update_layout(height=250, margin=dict(t=50, b=10, l=30, r=30))
+        fig.add_annotation(
+            text=f"<b>{prob:.0%}</b>",
+            font=dict(size=36, color=color),
+            showarrow=False, x=0.5, y=0.55,
+        )
+        fig.add_annotation(
+            text="HOF Prob",
+            font=dict(size=12, color="#999"),
+            showarrow=False, x=0.5, y=0.38,
+        )
+        fig.update_layout(
+            height=220, margin=dict(t=10, b=10, l=10, r=10),
+            showlegend=False,
+        )
         st.plotly_chart(fig, use_container_width=True)
 
         status_icon = "✅" if actual == "Yes" else "⏳"
-        st.markdown(f"**Status:** {status_icon} {'Inducted' if actual == 'Yes' else 'Not yet inducted'}")
+        st.markdown(f"<div style='text-align:center'><b>Status:</b> {status_icon} {'Inducted' if actual == 'Yes' else 'Not yet inducted'}</div>", unsafe_allow_html=True)
 
     with col_stats:
         st.markdown("##### Career Stats")
@@ -287,30 +291,29 @@ elif page == "🔄 Compare":
     r1 = all_players[all_players["Name"] == p1].iloc[0]
     r2 = all_players[all_players["Name"] == p2].iloc[0]
 
-    # Side by side probabilities
+    # Side by side probability rings
     col1, col2 = st.columns(2)
     for col, r, name in [(col1, r1, p1), (col2, r2, p2)]:
         prob = r["HOF_Prob"]
-        color = prob_color(prob)
+        clr = prob_color(prob)
         with col:
-            st.markdown(f"### {name}")
-            fig = go.Figure(go.Indicator(
-                mode="gauge+number",
-                value=prob * 100,
-                number={"suffix": "%", "font": {"size": 36}},
-                gauge={
-                    "axis": {"range": [0, 100]},
-                    "bar": {"color": color},
-                    "bgcolor": "#f0f0f0",
-                    "steps": [
-                        {"range": [0, 40], "color": "#fde8e8"},
-                        {"range": [40, 70], "color": "#fef6e0"},
-                        {"range": [70, 100], "color": "#e8f8ef"},
-                    ],
-                },
-                title={"text": "HOF Probability"},
+            fig = go.Figure(go.Pie(
+                values=[prob * 100, 100 - prob * 100],
+                hole=0.78,
+                marker=dict(colors=[clr, "#f0f0f0"], line=dict(width=0)),
+                textinfo="none", hoverinfo="skip", sort=False,
             ))
-            fig.update_layout(height=200, margin=dict(t=40, b=0, l=20, r=20))
+            fig.add_annotation(
+                text=f"<b>{prob:.0%}</b>",
+                font=dict(size=28, color=clr),
+                showarrow=False, x=0.5, y=0.55,
+            )
+            fig.add_annotation(
+                text=name.split()[-1],
+                font=dict(size=11, color="#999"),
+                showarrow=False, x=0.5, y=0.38,
+            )
+            fig.update_layout(height=180, margin=dict(t=5, b=5, l=5, r=5), showlegend=False)
             st.plotly_chart(fig, use_container_width=True)
 
     # Comparison table
