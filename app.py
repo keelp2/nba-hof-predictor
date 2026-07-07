@@ -131,25 +131,20 @@ if page == "🔮 Predict":
 
     with col_stats:
         st.markdown("##### Career Stats")
-        stat_cols = st.columns(7)
-        stat_items = [
-            ("Games", row["G"], ".0f"), ("PPG", row["PTS"], ".1f"),
-            ("RPG", row["TRB"], ".1f"), ("APG", row["AST"], ".1f"),
-            ("FG%", row["FG_PCT"], ".3f"), ("WS", row["WS"], ".1f"),
-            ("All-Star", row["TotalAllStar"], ".0f"),
-        ]
-        for col, (label, val, fmt) in zip(stat_cols, stat_items):
-            col.metric(label, f"{val:{fmt}}")
-
-        stat_cols2 = st.columns(7)
-        stat_items2 = [
-            ("SPG", row["STL"], ".1f"), ("BPG", row["BLK"], ".1f"),
-            ("3P%", row["3P_PCT"], ".3f"), ("FT%", row["FT_PCT"], ".3f"),
-            ("WS/48", row["WS_PerMin"], ".3f"), ("All-NBA", row["TotalAllNBA"], ".0f"),
-            ("All-Def", row["TotalAllD"], ".0f"),
-        ]
-        for col, (label, val, fmt) in zip(stat_cols2, stat_items2):
-            col.metric(label, f"{val:{fmt}}")
+        stats_row1 = {
+            "Games": f"{row['G']:.0f}", "PPG": f"{row['PTS']:.1f}",
+            "RPG": f"{row['TRB']:.1f}", "APG": f"{row['AST']:.1f}",
+            "FG%": f"{row['FG_PCT']:.3f}", "WS": f"{row['WS']:.1f}",
+            "All-Star": f"{row['TotalAllStar']:.0f}",
+        }
+        stats_row2 = {
+            "SPG": f"{row['STL']:.1f}", "BPG": f"{row['BLK']:.1f}",
+            "3P%": f"{row['3P_PCT']:.3f}", "FT%": f"{row['FT_PCT']:.3f}",
+            "WS/48": f"{row['WS_PerMin']:.3f}", "All-NBA": f"{row['TotalAllNBA']:.0f}",
+            "All-Def": f"{row['TotalAllD']:.0f}",
+        }
+        st.dataframe(pd.DataFrame([stats_row1]), hide_index=True, use_container_width=True)
+        st.dataframe(pd.DataFrame([stats_row2]), hide_index=True, use_container_width=True)
 
     # Radar chart: player vs avg HOFer
     st.markdown("##### Player vs. Average HOF Member")
