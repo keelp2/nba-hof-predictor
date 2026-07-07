@@ -75,8 +75,9 @@ hof_no = pd.concat([
     potentials,
 ], ignore_index=True).sort_values("HOF_Prob", ascending=False)
 
-# HOF averages for radar chart
-hof_avg = hof_yes[FEATURE_COLS].mean()
+# HOF averages for radar chart (modern era only — post-1980 players with tracked steals)
+hof_modern = hof_yes[hof_yes["STL"] > 0]
+hof_avg = hof_modern[FEATURE_COLS].mean()
 
 # ── Sidebar ──
 st.sidebar.title("🏀 NBA HOF Predictor")
@@ -148,6 +149,7 @@ if page == "🔮 Predict":
 
     # Radar chart: player vs avg HOFer
     st.markdown("##### Player vs. Average HOF Member")
+    st.caption(f"Averages based on {len(hof_modern)} modern-era HOF inductees (post-1980)")
     radar_stats = ["PTS", "TRB", "AST", "STL", "BLK", "WS_PerMin"]
     radar_labels = [FEATURE_LABELS[s] for s in radar_stats]
 
