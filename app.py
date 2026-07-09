@@ -10,7 +10,8 @@ import plotly.graph_objects as go
 st.set_page_config(page_title="NBA Hall of Fame Predictor", page_icon="🏀", layout="wide")
 
 # ── Google Analytics ──
-st.markdown("""
+import streamlit.components.v1 as components
+components.html("""
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LEL9VKSHFG"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -18,7 +19,7 @@ st.markdown("""
   gtag('js', new Date());
   gtag('config', 'G-LEL9VKSHFG');
 </script>
-""", unsafe_allow_html=True)
+""", height=0)
 
 # ── Load and prepare data ──
 FEATURE_COLS = [
