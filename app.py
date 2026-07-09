@@ -9,17 +9,21 @@ import plotly.graph_objects as go
 # ── Page config ──
 st.set_page_config(page_title="NBA Hall of Fame Predictor", page_icon="🏀", layout="wide")
 
-# ── Google Analytics ──
-import streamlit.components.v1 as components
-components.html("""
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-LEL9VKSHFG"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-LEL9VKSHFG');
-</script>
-""", height=0)
+# ── Google Analytics via Measurement Protocol ──
+import urllib.request
+import uuid
+try:
+    client_id = str(uuid.uuid4())
+    payload = f'{{"client_id":"{client_id}","events":[{{"name":"page_view","params":{{"page_title":"NBA Hall of Fame Predictor","page_location":"https://nba-hof-predict.streamlit.app/"}}}}]}}'
+    req = urllib.request.Request(
+        "https://www.google-analytics.com/mp/collect?measurement_id=G-LEL9VKSHFG&api_secret=_vLjGUhNS-uGcjJS8zepvw",
+        data=payload.encode(),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    urllib.request.urlopen(req, timeout=3)
+except Exception:
+    pass
 
 # ── Load and prepare data ──
 FEATURE_COLS = [
