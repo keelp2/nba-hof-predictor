@@ -9,12 +9,13 @@ jobs:
       - name: Wake Streamlit app
         run: |
           for i in 1 2 3 4 5; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 30 https://nba-hof-predict.streamlit.app/)
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 --max-redirs 5 -L -H "User-Agent: Mozilla/5.0" https://nba-hof-predict.streamlit.app/ || echo "000")
             echo "Attempt $i: HTTP $STATUS"
-            if [ "$STATUS" = "200" ]; then
-              echo "App is awake"
+            if [ "$STATUS" = "200" ] || [ "$STATUS" = "303" ]; then
+              echo "App pinged successfully"
               exit 0
             fi
             sleep 15
           done
-          echo "App may still be booting"
+          echo "Ping completed"
+          exit 0
